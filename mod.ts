@@ -406,7 +406,7 @@ export function Struct<L extends Layout>(
         }] ${field.name}: ${
           field.type === "ptr" &&
             (typeof value === "bigint" || typeof value === "number")
-            ? (value === 0n
+            ? (value === null
               ? "nullptr"
               : `*0x${value.toString(16).padStart(16, "0")}`)
             : Deno.inspect(value, { colors: !Deno.noColor }).split("\n").map(
