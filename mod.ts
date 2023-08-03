@@ -23,18 +23,20 @@ export type Layout = {
   [name: string]: FieldType;
 };
 
+export type PointerValue = number | bigint
+
 export type MapBaseFieldType<F extends FieldType> = F extends "u8" ? number
   : F extends "i8" ? number
   : F extends "u16" ? number
   : F extends "i16" ? number
   : F extends "u32" ? number
   : F extends "i32" ? number
-  : F extends "u64" ? Deno.PointerValue
-  : F extends "i64" ? Deno.PointerValue
+  : F extends "u64" ? PointerValue
+  : F extends "i64" ? PointerValue
   : F extends "f32" ? number
   : F extends "f64" ? number
   : F extends "bool" ? boolean
-  : F extends "ptr" ? Deno.PointerValue
+  : F extends "ptr" ? PointerValue
   : never;
 
 export type MapArrayFieldType<F extends FieldType> = F extends `u8[${number}]`
@@ -406,7 +408,7 @@ export function Struct<L extends Layout>(
         }] ${field.name}: ${
           field.type === "ptr" &&
             (typeof value === "bigint" || typeof value === "number")
-            ? (value === null
+            ? (value === 0n
               ? "nullptr"
               : `*0x${value.toString(16).padStart(16, "0")}`)
             : Deno.inspect(value, { colors: !Deno.noColor }).split("\n").map(
