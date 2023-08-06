@@ -177,7 +177,7 @@ export const mapTypedArray = (type: BaseFieldType) =>
     ptr: BigUint64Array,
   })[type];
 
-export function Struct<L extends Layout>(
+export function struct<L extends Layout>(
   layout: L,
   data?: ArrayBuffer,
   littleEndian = LITTLE_ENDIAN,
@@ -193,25 +193,25 @@ export function Struct<L extends Layout>(
     data = new ArrayBuffer(padded.size);
   }
 
-  const struct = {};
+  const s = {};
 
-  Object.defineProperty(struct, "_buffer", {
+  Object.defineProperty(s, "_buffer", {
     enumerable: false,
     value: data,
   });
 
-  Object.defineProperty(struct, "_bufferView", {
+  Object.defineProperty(s, "_bufferView", {
     enumerable: false,
     value: new DataView(data),
   });
 
-  Object.defineProperty(struct, "_littleEndian", {
+  Object.defineProperty(s, "_littleEndian", {
     enumerable: false,
     value: littleEndian,
   });
 
   for (const field of padded.fields) {
-    Object.defineProperty(struct, field.name, {
+    Object.defineProperty(s, field.name, {
       get(this: Struct<L>) {
         switch (field.type) {
           case "u8":
@@ -393,7 +393,7 @@ export function Struct<L extends Layout>(
     });
   }
 
-  (struct as any)[Symbol.for("Deno.customInspect")] = function (
+  (s as any)[Symbol.for("Deno.customInspect")] = function (
     this: Struct<L>,
   ) {
     return `Struct(0x${
@@ -418,5 +418,5 @@ export function Struct<L extends Layout>(
     }\n}`;
   };
 
-  return struct as unknown as Struct<L>;
+  return s as unknown as Struct<L>;
 }
