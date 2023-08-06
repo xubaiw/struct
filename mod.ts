@@ -23,20 +23,18 @@ export type Layout = {
   [name: string]: FieldType;
 };
 
-export type PointerValue = number | bigint
-
 export type MapBaseFieldType<F extends FieldType> = F extends "u8" ? number
   : F extends "i8" ? number
   : F extends "u16" ? number
   : F extends "i16" ? number
   : F extends "u32" ? number
   : F extends "i32" ? number
-  : F extends "u64" ? PointerValue
-  : F extends "i64" ? PointerValue
+  : F extends "u64" ? number | bigint
+  : F extends "i64" ? number | bigint
   : F extends "f32" ? number
   : F extends "f64" ? number
   : F extends "bool" ? boolean
-  : F extends "ptr" ? PointerValue
+  : F extends "ptr" ? number | bigint
   : never;
 
 export type MapArrayFieldType<F extends FieldType> = F extends `u8[${number}]`
